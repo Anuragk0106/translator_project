@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Translator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Translate Text</h1>
+    <form id="translator-form">
+        <label for="text_to_translate">Text to Translate:</label><br>
+        <textarea id="text_to_translate" name="text_to_translate" rows="4" cols="50"></textarea><br>
+        <label for="destination_language">Destination Language (e.g., 'fr' for French):</label><br>
+        <input type="text" id="destination_language" name="destination_language" value="en"><br><br>
+        <input type="submit" value="Translate">
+    </form>
+    <h2>Translated Text:</h2>
+    <div id="translated_text"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#translator-form').on('submit', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/translate/',
+                    type: 'POST',
+                    data: {
+                        text_to_translate: $('#text_to_translate').val(),
+                        destination_language: $('#destination_language').val(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        $('#translated_text').text(response.translated_text);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
